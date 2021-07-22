@@ -74,7 +74,7 @@ u8 IIC_SlaveRespond()
 }
 
 //主机应答信号,0应答,1非应答
-u8 IIC_SlaveRespond()
+u8 IIC_MasterRespond()
 {
 	I2CMSST &= 0xfe;
 	I2CMSCR = 0x05;
@@ -175,7 +175,7 @@ u16 INA219_ReceiveByte(u8 slave_address,u8 slave_reg_address)
 	
 	I2CMSCR = 0x04;
 	data_temp[1] = I2CRXD;
-	IIC_SlaveRespond()
+	IIC_SlaveRespond();
 	
 	//停止命令
 	IIC_Stop();

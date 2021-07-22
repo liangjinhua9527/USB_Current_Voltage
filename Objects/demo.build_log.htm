@@ -3,13 +3,13 @@
 <pre>
 <h1>礦ision Build Log</h1>
 <h2>Tool Versions:</h2>
-IDE-Version: μVision V5.14.2
+IDE-Version: μVision V5.16a
 Copyright (C) 2015 ARM Ltd and ARM Germany GmbH. All rights reserved.
-License Information:  ,  , LIC=----
+License Information:  ,  , LIC=TI4EI-TSVM9-4FHI9-48X3D-MR376-80XQD
  
 Tool Versions:
-Toolchain:       PK51 Prof. Develpers Kit  Version: 9.54
-Toolchain Path:  D:\Keil_v5\C51\BIN
+Toolchain:       PK51 Prof. Developers Kit  Version: 9.54
+Toolchain Path:  G:\keil_v5cm\C51\BIN
 C Compiler:      C51.exe V9.54
 Assembler:       A51.exe V8.02c
 Linker/Locator:  BL51.exe V6.22
@@ -18,17 +18,37 @@ Hex Converter:   OH51.exe V2.7.0.0
 CPU DLL:         S8051.DLL V3.100.0.0
 Dialog DLL:      DP51.DLL V2.62.0.1 
 <h2>Project:</h2>
-C:\Users\Administrator\Desktop\7\电流检测\STC_USB_Current_Voltage\STC_USB_CV.uvproj
-Project File Date:  07/20/2021
+C:\Users\JH\Desktop\7\电流检测\USB_Current_Voltage\STC_USB_CV.uvproj
+Project File Date:  07/22/2021
 
 <h2>Output:</h2>
 Build target 'Target 1'
-compiling INA219.c...
-Workspace\Code\INA219.c(81): warning C173: missing return-expression
-Workspace\Code\INA219.c(81): error C237: 'IIC_SlaveRespond': function already has a body
-Workspace\Code\INA219.c(181): error C141: syntax error near 'IIC_Stop'
 compiling mian.c...
-Target not created.
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?INA219_GPIOINIT?INA219
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?IIC_MASTERRESPOND?INA219
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_INA219_SENDBYTE?INA219
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_INA219_RECEIVEBYTE?INA219
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?OLED
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?OLED_DISPLAY_ON?OLED
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?OLED_DISPLAY_OFF?OLED
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_OLED_SHOWNUM?OLED
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_OLED_SHOWCHINESE?OLED
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_OLED_DRAWBMP?OLED
+Program Size: data=88.1 xdata=0 code=6272
+creating hex file from ".\Objects\demo"...
+".\Objects\demo" - 0 Error(s), 10 Warning(s).
+Build Time Elapsed:  00:00:00
 </pre>
 </body>
 </html>

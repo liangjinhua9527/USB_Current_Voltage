@@ -1,10 +1,10 @@
-C51 COMPILER V9.54   OLED                                                                  07/22/2021 09:44:59 PAGE 1   
+C51 COMPILER V9.54   OLED                                                                  07/22/2021 19:26:29 PAGE 1   
 
 
 C51 COMPILER V9.54, COMPILATION OF MODULE OLED
 OBJECT MODULE PLACED IN .\Objects\OLED.obj
-COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE Workspace\Code\OLED.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Workspace;.\Work
-                    -space\Include) DEBUG OBJECTEXTEND PRINT(.\Listings\OLED.lst) TABS(2) OBJECT(.\Objects\OLED.obj)
+COMPILER INVOKED BY: G:\keil_v5cm\C51\BIN\C51.EXE Workspace\Code\OLED.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Workspace;.\Wo
+                    -rkspace\Include) DEBUG OBJECTEXTEND PRINT(.\Listings\OLED.lst) TABS(2) OBJECT(.\Objects\OLED.obj)
 
 line level    source
 
@@ -62,7 +62,7 @@ line level    source
   52   1        unsigned int a;
   53   1        while(ms)
   54   1        {
-C51 COMPILER V9.54   OLED                                                                  07/22/2021 09:44:59 PAGE 2   
+C51 COMPILER V9.54   OLED                                                                  07/22/2021 19:26:29 PAGE 2   
 
   55   2          a=1800;
   56   2          while(a--);
@@ -126,7 +126,7 @@ line level    source
  114   1        OLED_SCL_Set();
  115   1        IIC_delay();
  116   1        OLED_SDA_Set();
-C51 COMPILER V9.54   OLED                                                                  07/22/2021 09:44:59 PAGE 3   
+C51 COMPILER V9.54   OLED                                                                  07/22/2021 19:26:29 PAGE 3   
 
  117   1      }
  118          
@@ -190,7 +190,7 @@ line level    source
  176   1      }       
  177          //开启OLED显示    
  178          void OLED_Display_On(void)
-C51 COMPILER V9.54   OLED                                                                  07/22/2021 09:44:59 PAGE 4   
+C51 COMPILER V9.54   OLED                                                                  07/22/2021 19:26:29 PAGE 4   
 
  179          {
  180   1        OLED_WR_Byte(0X8D,OLED_CMD);  //SET DCDC命令
@@ -254,7 +254,7 @@ line level    source
  238          {           
  239   1        u8 t,temp,m=0;
  240   1        u8 enshow=0;
-C51 COMPILER V9.54   OLED                                                                  07/22/2021 09:44:59 PAGE 5   
+C51 COMPILER V9.54   OLED                                                                  07/22/2021 19:26:29 PAGE 5   
 
  241   1        if(sizey==8)m=2;
  242   1        for(t=0;t<len;t++)
@@ -318,7 +318,7 @@ line level    source
  300          
  301          
  302          //初始化            
-C51 COMPILER V9.54   OLED                                                                  07/22/2021 09:44:59 PAGE 6   
+C51 COMPILER V9.54   OLED                                                                  07/22/2021 19:26:29 PAGE 6   
 
  303          void OLED_Init(void)
  304          {

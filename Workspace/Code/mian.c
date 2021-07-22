@@ -9,7 +9,7 @@ void main(void)
 	int t = 122;
 	OLED_Init();//初始化OLED 
 	OLED_ColorTurn(0);//0正常显示，1 反色显示
-  OLED_DisplayTurn(1);//0正常显示 1 屏幕翻转显示	123
+  OLED_DisplayTurn(0);//0正常显示 1 屏幕翻转显示	123
 	while(1) 
 	{		
 		sprintf(buff,"6823%d",t);

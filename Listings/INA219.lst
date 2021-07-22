@@ -1,10 +1,10 @@
-C51 COMPILER V9.54   INA219                                                                07/22/2021 09:45:56 PAGE 1   
+C51 COMPILER V9.54   INA219                                                                07/22/2021 19:28:10 PAGE 1   
 
 
 C51 COMPILER V9.54, COMPILATION OF MODULE INA219
 OBJECT MODULE PLACED IN .\Objects\INA219.obj
-COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE Workspace\Code\INA219.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Workspace;.\Wo
-                    -rkspace\Include) DEBUG OBJECTEXTEND PRINT(.\Listings\INA219.lst) TABS(2) OBJECT(.\Objects\INA219.obj)
+COMPILER INVOKED BY: G:\keil_v5cm\C51\BIN\C51.EXE Workspace\Code\INA219.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Workspace;.\
+                    -Workspace\Include) DEBUG OBJECTEXTEND PRINT(.\Listings\INA219.lst) TABS(2) OBJECT(.\Objects\INA219.obj)
 
 line level    source
 
@@ -62,7 +62,7 @@ line level    source
   52          //停止命令
   53          void IIC_Stop()
   54          {
-C51 COMPILER V9.54   INA219                                                                07/22/2021 09:45:56 PAGE 2   
+C51 COMPILER V9.54   INA219                                                                07/22/2021 19:28:10 PAGE 2   
 
   55   1        I2CMSCR = 0x06; 
   56   1      }
@@ -86,13 +86,12 @@ line level    source
   74   1      }
   75          
   76          //主机应答信号,0应答,1非应答
-  77          u8 IIC_SlaveRespond()
+  77          u8 IIC_MasterRespond()
   78          {
   79   1        I2CMSST &= 0xfe;
   80   1        I2CMSCR = 0x05;
   81   1      }
 *** WARNING C173 IN LINE 81 OF Workspace\Code\INA219.c: missing return-expression
-*** ERROR C237 IN LINE 81 OF Workspace\Code\INA219.c: 'IIC_SlaveRespond': function already has a body
   82          
   83          //IIC发送byte
   84          void INA219_SendByte(u16 iic_data,u8 slave_address,u8 slave_reg_address)
@@ -126,9 +125,9 @@ line level    source
  112   1        while(IIC_Respond() != 0x00)  goto iic_failure;     //从机应答
  113   1        
  114   1        //发送数据
-C51 COMPILER V9.54   INA219                                                                07/22/2021 09:45:56 PAGE 3   
-
  115   1      
+C51 COMPILER V9.54   INA219                                                                07/22/2021 19:28:10 PAGE 3   
+
  116   1        I2CTXD = iic_data;
  117   1        I2CMSCR = 0x02;
  118   1        while(IIC_Respond() != 0x00)  goto iic_failure;     //从机应答
@@ -190,14 +189,13 @@ line level    source
  174   1        IIC_SlaveRespond();
  175   1        
  176   1        I2CMSCR = 0x04;
-C51 COMPILER V9.54   INA219                                                                07/22/2021 09:45:56 PAGE 4   
-
  177   1        data_temp[1] = I2CRXD;
- 178   1        IIC_SlaveRespond()
+C51 COMPILER V9.54   INA219                                                                07/22/2021 19:28:10 PAGE 4   
+
+ 178   1        IIC_SlaveRespond();
  179   1        
  180   1        //停止命令
  181   1        IIC_Stop();
-*** ERROR C141 IN LINE 181 OF Workspace\Code\INA219.c: syntax error near 'IIC_Stop'
  182   1        P_SW2 = 0x00;       //关闭访问xfr寄存器
  183   1        
  184   1        receive_data = ((u16)data_temp[0] << 8 | data_temp[1]);
@@ -228,5 +226,18 @@ line level    source
  209          
  210          
  211          
+*** WARNING C290 IN LINE 81 OF Workspace\Code\INA219.c: missing return value
 
-C51 COMPILATION COMPLETE.  1 WARNING(S),  2 ERROR(S)
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    486    ----
+   CONSTANT SIZE    =      4    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      16
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  2 WARNING(S),  0 ERROR(S)
