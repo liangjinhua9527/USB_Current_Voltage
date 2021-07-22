@@ -1,4 +1,4 @@
-C51 COMPILER V9.54   IO                                                                    07/22/2021 19:26:28 PAGE 1   
+C51 COMPILER V9.54   IO                                                                    07/22/2021 23:51:18 PAGE 1   
 
 
 C51 COMPILER V9.54, COMPILATION OF MODULE IO
@@ -62,7 +62,7 @@ line level    source
   52   2          P2M0 = (Gpio_init.gpio_mode & 0x01) << Gpio_pin;
   53   2          P2M1 = ((Gpio_init.gpio_mode & 0x02) >> 1) << Gpio_pin;
   54   2      
-C51 COMPILER V9.54   IO                                                                    07/22/2021 19:26:28 PAGE 2   
+C51 COMPILER V9.54   IO                                                                    07/22/2021 23:51:18 PAGE 2   
 
   55   2          //上拉
   56   2          P2PU = Gpio_init.gpio_pxpu << Gpio_pin;
@@ -126,7 +126,7 @@ line level    source
  114   2          //模式
  115   2          P5M0 = (Gpio_init.gpio_mode & 0x01) << Gpio_pin;
  116   2          P5M1 = ((Gpio_init.gpio_mode & 0x02) >> 1) << Gpio_pin; 
-C51 COMPILER V9.54   IO                                                                    07/22/2021 19:26:28 PAGE 3   
+C51 COMPILER V9.54   IO                                                                    07/22/2021 23:51:18 PAGE 3   
 
  117   2      
  118   2          //上拉

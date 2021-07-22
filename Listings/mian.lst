@@ -1,4 +1,4 @@
-C51 COMPILER V9.54   MIAN                                                                  07/22/2021 19:28:57 PAGE 1   
+C51 COMPILER V9.54   MIAN                                                                  07/22/2021 23:59:20 PAGE 1   
 
 
 C51 COMPILER V9.54, COMPILATION OF MODULE MIAN
@@ -15,69 +15,83 @@ line level    source
    5          
    6          void main(void)
    7          {
-   8   1          char buff[10] = {0};
-   9   1        int t = 122;
-  10   1        OLED_Init();//初始化OLED 
-  11   1        OLED_ColorTurn(0);//0正常显示，1 反色显示
-  12   1        OLED_DisplayTurn(0);//0正常显示 1 屏幕翻转显示  123
-  13   1        while(1) 
-  14   1        {   
-  15   2          sprintf(buff,"6823%d",t);
-  16   2          OLED_ShowString(0,0,buff,16);//显示ASCII字符   
-  17   2          OLED_ShowString(0,2,buff,16);//显示ASCII字符   
-  18   2      //    delay_ms(500);
-  19   2      //    OLED_Clear();
-  20   2        }   
-  21   1      
-  22   1        
-  23   1        
-  24   1        
-  25   1        
-  26   1        
-  27   1        
-  28   1        
-  29   1        
-  30   1      //  u8 t=' ';
-  31   1      //  OLED_Init();//初始化OLED 
-  32   1      //  OLED_ColorTurn(0);//0正常显示，1 反色显示
-  33   1      //  OLED_DisplayTurn(0);//0正常显示 1 屏幕翻转显示  
-  34   1      //  while(1) 
-  35   1      //  {   
-  36   1      
-  37   1      //    delay_ms(500);
-  38   1      //    OLED_Clear();
-  39   1      //    OLED_ShowChinese(0,0,0,16);//中
-  40   1      //    OLED_ShowChinese(18,0,1,16);//景
-  41   1      //    OLED_ShowChinese(36,0,2,16);//园
-  42   1      //    OLED_ShowChinese(54,0,3,16);//电
-  43   1      //    OLED_ShowChinese(72,0,4,16);//子
-  44   1      //    OLED_ShowChinese(90,0,5,16);//科
-  45   1      //    OLED_ShowChinese(108,0,6,16);//技
-  46   1      //    OLED_ShowString(8,2,"ZHONGJINGYUAN",16);
-  47   1      //    delay_ms(500);
-  48   1      //    OLED_Clear();
-  49   1      //    OLED_ShowString(20,0,"2014/05/01",16);
-  50   1      //    OLED_ShowString(0,2,"ASCII:",16);  
-  51   1      //    OLED_ShowString(63,2,"CODE:",16);
-  52   1      //    OLED_ShowChar(48,2,t,16);//显示ASCII字符     
-  53   1      //    t++;
-  54   1      //    if(t>'~')t=' ';
-C51 COMPILER V9.54   MIAN                                                                  07/22/2021 19:28:57 PAGE 2   
+   8   1        char buff[10] = {0};
+   9   1        u16 ll=0;
+  10   1        
+  11   1        int t = 0;
+  12   1        OLED_Init();//初始化OLED 
+  13   1        OLED_ColorTurn(0);//0正常显示，1 反色显示
+  14   1        OLED_DisplayTurn(0);//0正常显示 1 屏幕翻转显示  123
+  15   1        INA219_GpioInit();
+  16   1      //  while(1) 
+  17   1        {   
+  18   2          
+  19   2          
+  20   2          INA219_SendByte(0x0281,INA219_Write_Slave_Address,INA219_Calibration_Register);
+  21   2          delay_ms(500);
+  22   2          ll = INA219_ReceiveByte(INA219_Write_Slave_Address, INA219_Calibration_Register);
+  23   2          
+  24   2          t = (ll >> 8) & 0x00ff;
+  25   2          sprintf(buff,"%d",t);
+  26   2          OLED_ShowString(0,2,buff,16);
+  27   2          while(1);
+  28   2      //    sprintf(buff,"6823%d",t);
+  29   2      //    OLED_ShowChar(120,2,'1',8);//显示ASCII字符     
+  30   2      //    OLED_ShowString(0,0,buff,16);
+  31   2      //    OLED_ShowString(0,2,buff,16);
+  32   2      //    delay_ms(500);
+  33   2      //    OLED_Clear();
+  34   2        }   
+  35   1      
+  36   1        
+  37   1        
+  38   1        
+  39   1        
+  40   1        
+  41   1        
+  42   1        
+  43   1        
+  44   1      //  u8 t=' ';
+  45   1      //  OLED_Init();//初始化OLED 
+  46   1      //  OLED_ColorTurn(0);//0正常显示，1 反色显示
+  47   1      //  OLED_DisplayTurn(0);//0正常显示 1 屏幕翻转显示  
+  48   1      //  while(1) 
+  49   1      //  {   
+  50   1      
+  51   1      //    delay_ms(500);
+  52   1      //    OLED_Clear();
+  53   1      //    OLED_ShowChinese(0,0,0,16);//中
+  54   1      //    OLED_ShowChinese(18,0,1,16);//景
+C51 COMPILER V9.54   MIAN                                                                  07/22/2021 23:59:20 PAGE 2   
 
-  55   1      //    OLED_ShowNum(103,2,t,3,16);
-  56   1      //    delay_ms(500);
-  57   1      //    OLED_Clear();
-  58   1      //  }   
-  59   1      //    return 0;
-  60   1      }
+  55   1      //    OLED_ShowChinese(36,0,2,16);//园
+  56   1      //    OLED_ShowChinese(54,0,3,16);//电
+  57   1      //    OLED_ShowChinese(72,0,4,16);//子
+  58   1      //    OLED_ShowChinese(90,0,5,16);//科
+  59   1      //    OLED_ShowChinese(108,0,6,16);//技
+  60   1      //    OLED_ShowString(8,2,"ZHONGJINGYUAN",16);
+  61   1      //    delay_ms(500);
+  62   1      //    OLED_Clear();
+  63   1      //    OLED_ShowString(20,0,"2014/05/01",16);
+  64   1      //    OLED_ShowString(0,2,"ASCII:",16);  
+  65   1      //    OLED_ShowString(63,2,"CODE:",16);
+  66   1      //    OLED_ShowChar(48,2,t,16);//显示ASCII字符     
+  67   1      //    t++;
+  68   1      //    if(t>'~')t=' ';
+  69   1      //    OLED_ShowNum(103,2,t,3,16);
+  70   1      //    delay_ms(500);
+  71   1      //    OLED_Clear();
+  72   1      //  }   
+  73   1      //    return 0;
+  74   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =     95    ----
-   CONSTANT SIZE    =     17    ----
+   CODE SIZE        =    109    ----
+   CONSTANT SIZE    =     13    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =   ----      12
+   DATA SIZE        =   ----      10
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
 END OF MODULE INFORMATION.

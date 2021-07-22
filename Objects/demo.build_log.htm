@@ -23,18 +23,13 @@ Project File Date:  07/22/2021
 
 <h2>Output:</h2>
 Build target 'Target 1'
-compiling mian.c...
+compiling INA219.c...
+Workspace\Code\INA219.c(90): warning C173: missing return-expression
+Workspace\Code\INA219.c(90): warning C290: missing return value
+Workspace\Code\INA219.c(217): warning C294: unreachable code
 linking...
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
-    SEGMENT: ?PR?INA219_GPIOINIT?INA219
-*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
-    SEGMENT: ?PR?IIC_MASTERRESPOND?INA219
-*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
-    SEGMENT: ?PR?_INA219_SENDBYTE?INA219
-*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
-    SEGMENT: ?PR?_INA219_RECEIVEBYTE?INA219
-*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
-    SEGMENT: ?PR?_DELAY_MS?OLED
+    SEGMENT: ?PR?DELAY1MS?INA219
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?OLED_DISPLAY_ON?OLED
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
@@ -45,9 +40,9 @@ linking...
     SEGMENT: ?PR?_OLED_SHOWCHINESE?OLED
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?_OLED_DRAWBMP?OLED
-Program Size: data=88.1 xdata=0 code=6272
+Program Size: data=88.1 xdata=0 code=6426
 creating hex file from ".\Objects\demo"...
-".\Objects\demo" - 0 Error(s), 10 Warning(s).
+".\Objects\demo" - 0 Error(s), 9 Warning(s).
 Build Time Elapsed:  00:00:00
 </pre>
 </body>

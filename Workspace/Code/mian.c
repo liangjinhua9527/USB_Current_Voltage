@@ -5,16 +5,30 @@
 
 void main(void)
 {
-		char buff[10] = {0};
-	int t = 122;
+	char buff[10] = {0};
+	u16 ll=0;
+	
+	int t = 0;
 	OLED_Init();//初始化OLED 
 	OLED_ColorTurn(0);//0正常显示，1 反色显示
   OLED_DisplayTurn(0);//0正常显示 1 屏幕翻转显示	123
-	while(1) 
+	INA219_GpioInit();
+//	while(1) 
 	{		
-		sprintf(buff,"6823%d",t);
-		OLED_ShowString(0,0,buff,16);//显示ASCII字符	 
-		OLED_ShowString(0,2,buff,16);//显示ASCII字符	 
+		
+		
+		INA219_SendByte(0x0281,INA219_Write_Slave_Address,INA219_Calibration_Register);
+		delay_ms(500);
+		ll = INA219_ReceiveByte(INA219_Write_Slave_Address, INA219_Calibration_Register);
+		
+		t = (ll >> 8) & 0x00ff;
+		sprintf(buff,"%d",t);
+		OLED_ShowString(0,2,buff,16);
+		while(1);
+//		sprintf(buff,"6823%d",t);
+//		OLED_ShowChar(120,2,'1',8);//显示ASCII字符	   
+//		OLED_ShowString(0,0,buff,16);
+//		OLED_ShowString(0,2,buff,16);
 //		delay_ms(500);
 //		OLED_Clear();
 	}	  
