@@ -1,0 +1,2 @@
+TIME: 210717
+CONTENT: 增加函数初始化IO
