@@ -50,7 +50,7 @@ void Delay1ms()		//@24.000MHz
 	} while (--i);
 }
 
-
+//执行完成寄存器 I2CMSCR中 MSCMD 命令后产生中断信号
 void Wait()
 {
 	while (!(I2CMSST & 0x40));
@@ -82,7 +82,15 @@ u8 IIC_SlaveRespond()
 }
 
 //主机应答信号,0应答,1非应答
-u8 IIC_MasterRespond()
+void IIC_MasterNotRespond()
+{
+	I2CMSST |= 0x01;
+	I2CMSCR = 0x05;
+	Wait();
+}
+
+//主机应答信号,0应答,1非应答
+void IIC_MasterRespond()
 {
 	I2CMSST &= 0xfe;
 	I2CMSCR = 0x05;
@@ -102,7 +110,6 @@ void IIC_MasterSendByte(u8 send_data)
 u8 IIC_MasterReceiveByte()
 {
 	u8 receive_data = 0;
-	
 	I2CMSCR = 0x04;
 	receive_data = I2CRXD;
 	Wait();
@@ -115,55 +122,52 @@ void INA219_SendByte(u16 iic_data,u8 slave_address,u8 slave_reg_address)
 {
 	u8 data_temp[2] = {0};
 	data_temp[0] = iic_data >> 8;
-	data_temp[1] = (u8) iic_data;
+	data_temp[1] = iic_data & 0x00ff;
 	
 	//判断总线是否处于忙
 
-	iic_failure:
+	iic_Sendfailure:
 	P_SW2 = 0x80; 			//允许访问xfr寄存器
 	I2CCFG = 0xe0;			//允许IIC功能,主机模式,速率176Khz
 	I2CMSCR = 0x00; 	//不允许主机模式中断 
-	while((I2CMSST & 0x80) == 0x80)  goto iic_failure; //判断是否处于空闲状态
-
-	OLED_ShowChar(0,0,'1',8);//显示ASCII字符	
+	while((I2CMSST & 0x80) == 0x80)  goto iic_Sendfailure; //判断是否处于空闲状态
 	
 	//起始命令
 	
 	IIC_Start();
 	
 	//发送从机地址
-	IIC_MasterSendByte(slave_address);
-	while(IIC_SlaveRespond() != 0)  goto iic_failure;  	//从机应答
-	OLED_ShowChar(10,0,'2',8);//显示ASCII字符	
+	IIC_MasterSendByte(slave_address & 0xfe);
+	while(IIC_SlaveRespond() != 0)  goto iic_Sendfailure;  	//从机应答
+
 
 	//发送从机寄存器地址
-	IIC_MasterSendByte(slave_reg_address );
-	while(IIC_SlaveRespond() != 0)  goto iic_failure;  	  //从机应答
-	
-	OLED_ShowChar(20,0,'3',8);//显示ASCII字符	
+	IIC_MasterSendByte(slave_reg_address);
+	while(IIC_SlaveRespond() != 0)  goto iic_Sendfailure;  	  //从机应答
+
 	
 	//发送数据
-	IIC_MasterSendByte(0x90);
-	while(IIC_SlaveRespond() != 0)  goto iic_failure;  	  //从机应答
-	OLED_ShowChar(30,0,'4',8);//显示ASCII字符	
+	IIC_MasterSendByte(data_temp[0]);
+	while(IIC_SlaveRespond() != 0)  goto iic_Sendfailure;  	  //从机应答
+
 	
-	IIC_MasterSendByte(0x80);
-	while(IIC_SlaveRespond() != 0)  goto iic_failure;  	  //从机应答
-	OLED_ShowChar(40,0,'5',8);//显示ASCII字符	
-	
+	IIC_MasterSendByte(data_temp[1]);
+	while(IIC_SlaveRespond() != 0)  goto iic_Sendfailure;  	  //从机应答
+
 	//停止命令
 	IIC_Stop();
 	P_SW2 = 0x00; 			//关闭访问xfr寄存器
-	OLED_ShowChar(50,0,'6',8);//显示ASCII字符	
+
 }
 
 //IIC接收byte
 u16 INA219_ReceiveByte(u8 slave_address,u8 slave_reg_address)
 {
 	char buff[10] = {0};
-	u8 data_temp[2] = {0};
+	int data_temp[2] = {0};
 	u16 receive_data = 0;
 	int kk = 0;
+	
 	//判断总线是否处于忙
 
 	iic_Recfailure:
@@ -171,7 +175,6 @@ u16 INA219_ReceiveByte(u8 slave_address,u8 slave_reg_address)
 	I2CCFG = 0xe0;			//允许IIC功能,主机模式,速率176Khz
 	I2CMSCR = 0x00; 		//不允许主机模式中断 
 	while((I2CMSST & 0x80) == 0x80)  goto iic_Recfailure; //判断是否处于空闲状态
-		OLED_ShowChar(0,0,'7',8);//显示ASCII字符	
 	
 	//起始命令
 	
@@ -179,15 +182,15 @@ u16 INA219_ReceiveByte(u8 slave_address,u8 slave_reg_address)
 	
 	//发送从机地址+写
 
-	IIC_MasterSendByte(slave_address);
+	IIC_MasterSendByte(slave_address & 0xfe);
 	while(IIC_SlaveRespond() != 0)  goto iic_Recfailure;  	//从机应答
-	OLED_ShowChar(0,0,'8',8);//显示ASCII字符	
+
 
 	//发送从机寄存器地址
 
 	IIC_MasterSendByte(slave_reg_address);
 	while(IIC_SlaveRespond() != 0)  goto iic_Recfailure;  	  //从机应答
-	OLED_ShowChar(0,0,'8',8);//显示ASCII字符	
+
 	//起始命令
 	IIC_Start();
 	
@@ -197,14 +200,11 @@ u16 INA219_ReceiveByte(u8 slave_address,u8 slave_reg_address)
 
 
 	//发送从机寄存器地址
-	kk = IIC_MasterReceiveByte();
+	data_temp[0] = IIC_MasterReceiveByte();
 	IIC_MasterRespond();
 	
-	kk = IIC_MasterReceiveByte();
-	IIC_MasterRespond();
-//	
-	kk = IIC_MasterReceiveByte();
-	IIC_MasterRespond();
+	data_temp[1] = IIC_MasterReceiveByte();
+	IIC_MasterNotRespond();
 	
 	//停止命令
 	IIC_Stop();

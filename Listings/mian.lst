@@ -1,10 +1,10 @@
-C51 COMPILER V9.54   MIAN                                                                  07/22/2021 23:59:20 PAGE 1   
+C51 COMPILER V9.54   MIAN                                                                  07/23/2021 17:23:20 PAGE 1   
 
 
 C51 COMPILER V9.54, COMPILATION OF MODULE MIAN
 OBJECT MODULE PLACED IN .\Objects\mian.obj
-COMPILER INVOKED BY: G:\keil_v5cm\C51\BIN\C51.EXE Workspace\Code\mian.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Workspace;.\Wo
-                    -rkspace\Include) DEBUG OBJECTEXTEND PRINT(.\Listings\mian.lst) TABS(2) OBJECT(.\Objects\mian.obj)
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE Workspace\Code\mian.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Workspace;.\Work
+                    -space\Include) DEBUG OBJECTEXTEND PRINT(.\Listings\mian.lst) TABS(2) OBJECT(.\Objects\mian.obj)
 
 line level    source
 
@@ -62,7 +62,7 @@ line level    source
   52   1      //    OLED_Clear();
   53   1      //    OLED_ShowChinese(0,0,0,16);//ÖÐ
   54   1      //    OLED_ShowChinese(18,0,1,16);//¾°
-C51 COMPILER V9.54   MIAN                                                                  07/22/2021 23:59:20 PAGE 2   
+C51 COMPILER V9.54   MIAN                                                                  07/23/2021 17:23:20 PAGE 2   
 
   55   1      //    OLED_ShowChinese(36,0,2,16);//Ô°
   56   1      //    OLED_ShowChinese(54,0,3,16);//µç
@@ -82,7 +82,7 @@ line level    source
   70   1      //    delay_ms(500);
   71   1      //    OLED_Clear();
   72   1      //  }   
-  73   1      //    return 0;
+  73   1      
   74   1      }
 
 

@@ -1,10 +1,10 @@
-C51 COMPILER V9.54   INA219                                                                07/23/2021 00:08:50 PAGE 1   
+C51 COMPILER V9.54   INA219                                                                07/23/2021 17:23:20 PAGE 1   
 
 
 C51 COMPILER V9.54, COMPILATION OF MODULE INA219
 OBJECT MODULE PLACED IN .\Objects\INA219.obj
-COMPILER INVOKED BY: G:\keil_v5cm\C51\BIN\C51.EXE Workspace\Code\INA219.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Workspace;.\
-                    -Workspace\Include) DEBUG OBJECTEXTEND PRINT(.\Listings\INA219.lst) TABS(2) OBJECT(.\Objects\INA219.obj)
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE Workspace\Code\INA219.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Workspace;.\Wo
+                    -rkspace\Include) DEBUG OBJECTEXTEND PRINT(.\Listings\INA219.lst) TABS(2) OBJECT(.\Objects\INA219.obj)
 
 line level    source
 
@@ -60,9 +60,9 @@ line level    source
   50   2        } while (--i);
   51   1      }
   52          
-  53          
+  53          //执行完成寄存器 I2CMSCR中 MSCMD 命令后产生中断信号
   54          void Wait()
-C51 COMPILER V9.54   INA219                                                                07/23/2021 00:08:50 PAGE 2   
+C51 COMPILER V9.54   INA219                                                                07/23/2021 17:23:20 PAGE 2   
 
   55          {
   56   1        while (!(I2CMSST & 0x40));
@@ -94,134 +94,133 @@ line level    source
   82   1      }
   83          
   84          //主机应答信号,0应答,1非应答
-  85          u8 IIC_MasterRespond()
+  85          void IIC_MasterNotRespond()
   86          {
-  87   1        I2CMSST &= 0xfe;
+  87   1        I2CMSST |= 0x01;
   88   1        I2CMSCR = 0x05;
   89   1        Wait();
   90   1      }
-*** WARNING C173 IN LINE 90 OF Workspace\Code\INA219.c: missing return-expression
   91          
-  92          //主机发送数据
-  93          void IIC_MasterSendByte(u8 send_data)
+  92          //主机应答信号,0应答,1非应答
+  93          void IIC_MasterRespond()
   94          {
-  95   1        I2CTXD = send_data;
-  96   1        I2CMSCR = 0x02;
+  95   1        I2CMSST &= 0xfe;
+  96   1        I2CMSCR = 0x05;
   97   1        Wait();
   98   1      }
   99          
- 100          
- 101          //主机接受数据
- 102          u8 IIC_MasterReceiveByte()
- 103          {
- 104   1        u8 receive_data = 0;
- 105   1        
- 106   1        I2CMSCR = 0x04;
- 107   1        receive_data = I2CRXD;
- 108   1        Wait();
- 109   1        return receive_data;
- 110   1      }
- 111          
- 112          
- 113          //IIC发送byte
- 114          void INA219_SendByte(u16 iic_data,u8 slave_address,u8 slave_reg_address)
- 115          {
-C51 COMPILER V9.54   INA219                                                                07/23/2021 00:08:50 PAGE 3   
+ 100          //主机发送数据
+ 101          void IIC_MasterSendByte(u8 send_data)
+ 102          {
+ 103   1        I2CTXD = send_data;
+ 104   1        I2CMSCR = 0x02;
+ 105   1        Wait();
+ 106   1      }
+ 107          
+ 108          
+ 109          //主机接受数据
+ 110          u8 IIC_MasterReceiveByte()
+ 111          {
+ 112   1        u8 receive_data = 0;
+ 113   1        I2CMSCR = 0x04;
+ 114   1        receive_data = I2CRXD;
+ 115   1        Wait();
+ 116   1        return receive_data;
+C51 COMPILER V9.54   INA219                                                                07/23/2021 17:23:20 PAGE 3   
 
- 116   1        u8 data_temp[2] = {0};
- 117   1        data_temp[0] = iic_data >> 8;
- 118   1        data_temp[1] = (u8) iic_data;
- 119   1        
- 120   1        //判断总线是否处于忙
- 121   1      
- 122   1        iic_failure:
- 123   1        P_SW2 = 0x80;       //允许访问xfr寄存器
- 124   1        I2CCFG = 0xe0;      //允许IIC功能,主机模式,速率176Khz
- 125   1        I2CMSCR = 0x00;   //不允许主机模式中断 
- 126   1        while((I2CMSST & 0x80) == 0x80)  goto iic_failure; //判断是否处于空闲状态
- 127   1      
- 128   1        OLED_ShowChar(0,0,'1',8);//显示ASCII字符  
- 129   1        
- 130   1        //起始命令
- 131   1        
- 132   1        IIC_Start();
- 133   1        
- 134   1        //发送从机地址
- 135   1        IIC_MasterSendByte(slave_address);
- 136   1        while(IIC_SlaveRespond() != 0)  goto iic_failure;   //从机应答
- 137   1        OLED_ShowChar(10,0,'2',8);//显示ASCII字符 
- 138   1      
- 139   1        //发送从机寄存器地址
- 140   1        IIC_MasterSendByte(slave_reg_address );
- 141   1        while(IIC_SlaveRespond() != 0)  goto iic_failure;     //从机应答
- 142   1        
- 143   1        OLED_ShowChar(20,0,'3',8);//显示ASCII字符 
- 144   1        
- 145   1        //发送数据
- 146   1        IIC_MasterSendByte(0x90);
- 147   1        while(IIC_SlaveRespond() != 0)  goto iic_failure;     //从机应答
- 148   1        OLED_ShowChar(30,0,'4',8);//显示ASCII字符 
- 149   1        
- 150   1        IIC_MasterSendByte(0x80);
- 151   1        while(IIC_SlaveRespond() != 0)  goto iic_failure;     //从机应答
- 152   1        OLED_ShowChar(40,0,'5',8);//显示ASCII字符 
+ 117   1      }
+ 118          
+ 119          
+ 120          //IIC发送byte
+ 121          void INA219_SendByte(u16 iic_data,u8 slave_address,u8 slave_reg_address)
+ 122          {
+ 123   1        u8 data_temp[2] = {0};
+ 124   1        data_temp[0] = iic_data >> 8;
+ 125   1        data_temp[1] = iic_data & 0x00ff;
+ 126   1        
+ 127   1        //判断总线是否处于忙
+ 128   1      
+ 129   1        iic_Sendfailure:
+ 130   1        P_SW2 = 0x80;       //允许访问xfr寄存器
+ 131   1        I2CCFG = 0xe0;      //允许IIC功能,主机模式,速率176Khz
+ 132   1        I2CMSCR = 0x00;   //不允许主机模式中断 
+ 133   1        while((I2CMSST & 0x80) == 0x80)  goto iic_Sendfailure; //判断是否处于空闲状态
+ 134   1        
+ 135   1        //起始命令
+ 136   1        
+ 137   1        IIC_Start();
+ 138   1        
+ 139   1        //发送从机地址
+ 140   1        IIC_MasterSendByte(slave_address & 0xfe);
+ 141   1        while(IIC_SlaveRespond() != 0)  goto iic_Sendfailure;   //从机应答
+ 142   1      
+ 143   1      
+ 144   1        //发送从机寄存器地址
+ 145   1        IIC_MasterSendByte(slave_reg_address);
+ 146   1        while(IIC_SlaveRespond() != 0)  goto iic_Sendfailure;     //从机应答
+ 147   1      
+ 148   1        
+ 149   1        //发送数据
+ 150   1        IIC_MasterSendByte(data_temp[0]);
+ 151   1        while(IIC_SlaveRespond() != 0)  goto iic_Sendfailure;     //从机应答
+ 152   1      
  153   1        
- 154   1        //停止命令
- 155   1        IIC_Stop();
- 156   1        P_SW2 = 0x00;       //关闭访问xfr寄存器
- 157   1        OLED_ShowChar(50,0,'6',8);//显示ASCII字符 
- 158   1      }
- 159          
- 160          //IIC接收byte
- 161          u16 INA219_ReceiveByte(u8 slave_address,u8 slave_reg_address)
- 162          {
- 163   1        char buff[10] = {0};
- 164   1        u8 data_temp[2] = {0};
- 165   1        u16 receive_data = 0;
- 166   1        int kk = 0;
- 167   1        //判断总线是否处于忙
- 168   1      
- 169   1        iic_Recfailure:
- 170   1        P_SW2 = 0x80;       //允许访问xfr寄存器
- 171   1        I2CCFG = 0xe0;      //允许IIC功能,主机模式,速率176Khz
- 172   1        I2CMSCR = 0x00;     //不允许主机模式中断 
- 173   1        while((I2CMSST & 0x80) == 0x80)  goto iic_Recfailure; //判断是否处于空闲状态
- 174   1          OLED_ShowChar(0,0,'7',8);//显示ASCII字符  
- 175   1        
- 176   1        //起始命令
- 177   1        
-C51 COMPILER V9.54   INA219                                                                07/23/2021 00:08:50 PAGE 4   
+ 154   1        IIC_MasterSendByte(data_temp[1]);
+ 155   1        while(IIC_SlaveRespond() != 0)  goto iic_Sendfailure;     //从机应答
+ 156   1      
+ 157   1        //停止命令
+ 158   1        IIC_Stop();
+ 159   1        P_SW2 = 0x00;       //关闭访问xfr寄存器
+ 160   1      
+ 161   1      }
+ 162          
+ 163          //IIC接收byte
+ 164          u16 INA219_ReceiveByte(u8 slave_address,u8 slave_reg_address)
+ 165          {
+ 166   1        char buff[10] = {0};
+ 167   1        int data_temp[2] = {0};
+ 168   1        u16 receive_data = 0;
+ 169   1        int kk = 0;
+ 170   1        
+ 171   1        //判断总线是否处于忙
+ 172   1      
+ 173   1        iic_Recfailure:
+ 174   1        P_SW2 = 0x80;       //允许访问xfr寄存器
+ 175   1        I2CCFG = 0xe0;      //允许IIC功能,主机模式,速率176Khz
+ 176   1        I2CMSCR = 0x00;     //不允许主机模式中断 
+ 177   1        while((I2CMSST & 0x80) == 0x80)  goto iic_Recfailure; //判断是否处于空闲状态
+ 178   1        
+C51 COMPILER V9.54   INA219                                                                07/23/2021 17:23:20 PAGE 4   
 
- 178   1        IIC_Start();
- 179   1        
- 180   1        //发送从机地址+写
- 181   1      
- 182   1        IIC_MasterSendByte(slave_address);
- 183   1        while(IIC_SlaveRespond() != 0)  goto iic_Recfailure;    //从机应答
- 184   1        OLED_ShowChar(0,0,'8',8);//显示ASCII字符  
- 185   1      
- 186   1        //发送从机寄存器地址
+ 179   1        //起始命令
+ 180   1        
+ 181   1        IIC_Start();
+ 182   1        
+ 183   1        //发送从机地址+写
+ 184   1      
+ 185   1        IIC_MasterSendByte(slave_address & 0xfe);
+ 186   1        while(IIC_SlaveRespond() != 0)  goto iic_Recfailure;    //从机应答
  187   1      
- 188   1        IIC_MasterSendByte(slave_reg_address);
- 189   1        while(IIC_SlaveRespond() != 0)  goto iic_Recfailure;      //从机应答
- 190   1        OLED_ShowChar(0,0,'8',8);//显示ASCII字符  
- 191   1        //起始命令
- 192   1        IIC_Start();
- 193   1        
- 194   1        //发送从机地址+读
- 195   1        IIC_MasterSendByte(slave_address |0x01);
- 196   1        while(IIC_SlaveRespond() != 0)  goto iic_Recfailure;    //从机应答
- 197   1      
- 198   1      
- 199   1        //发送从机寄存器地址
- 200   1        kk = IIC_MasterReceiveByte();
- 201   1        IIC_MasterRespond();
- 202   1        
- 203   1        kk = IIC_MasterReceiveByte();
+ 188   1      
+ 189   1        //发送从机寄存器地址
+ 190   1      
+ 191   1        IIC_MasterSendByte(slave_reg_address);
+ 192   1        while(IIC_SlaveRespond() != 0)  goto iic_Recfailure;      //从机应答
+ 193   1      
+ 194   1        //起始命令
+ 195   1        IIC_Start();
+ 196   1        
+ 197   1        //发送从机地址+读
+ 198   1        IIC_MasterSendByte(slave_address |0x01);
+ 199   1        while(IIC_SlaveRespond() != 0)  goto iic_Recfailure;    //从机应答
+ 200   1      
+ 201   1      
+ 202   1        //发送从机寄存器地址
+ 203   1        data_temp[0] = IIC_MasterReceiveByte();
  204   1        IIC_MasterRespond();
- 205   1      //  
- 206   1        kk = IIC_MasterReceiveByte();
- 207   1        IIC_MasterRespond();
+ 205   1        
+ 206   1        data_temp[1] = IIC_MasterReceiveByte();
+ 207   1        IIC_MasterNotRespond();
  208   1        
  209   1        //停止命令
  210   1        IIC_Stop();
@@ -254,26 +253,25 @@ line level    source
  237          
  238          
  239          
-C51 COMPILER V9.54   INA219                                                                07/23/2021 00:08:50 PAGE 5   
-
  240          
+C51 COMPILER V9.54   INA219                                                                07/23/2021 17:23:20 PAGE 5   
+
  241          
  242          
  243          
  244          
-*** WARNING C290 IN LINE 90 OF Workspace\Code\INA219.c: missing return value
 *** WARNING C294 IN LINE 217 OF Workspace\Code\INA219.c: unreachable code
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    617    ----
-   CONSTANT SIZE    =     17    ----
+   CODE SIZE        =    532    ----
+   CONSTANT SIZE    =     19    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =   ----      30
+   DATA SIZE        =   ----      28
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
 END OF MODULE INFORMATION.
 
 
-C51 COMPILATION COMPLETE.  3 WARNING(S),  0 ERROR(S)
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

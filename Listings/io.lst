@@ -1,10 +1,10 @@
-C51 COMPILER V9.54   IO                                                                    07/22/2021 23:51:18 PAGE 1   
+C51 COMPILER V9.54   IO                                                                    07/23/2021 17:21:52 PAGE 1   
 
 
 C51 COMPILER V9.54, COMPILATION OF MODULE IO
 OBJECT MODULE PLACED IN .\Objects\io.obj
-COMPILER INVOKED BY: G:\keil_v5cm\C51\BIN\C51.EXE Workspace\Code\io.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Workspace;.\Work
-                    -space\Include) DEBUG OBJECTEXTEND PRINT(.\Listings\io.lst) TABS(2) OBJECT(.\Objects\io.obj)
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE Workspace\Code\io.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Workspace;.\Worksp
+                    -ace\Include) DEBUG OBJECTEXTEND PRINT(.\Listings\io.lst) TABS(2) OBJECT(.\Objects\io.obj)
 
 line level    source
 
@@ -62,7 +62,7 @@ line level    source
   52   2          P2M0 = (Gpio_init.gpio_mode & 0x01) << Gpio_pin;
   53   2          P2M1 = ((Gpio_init.gpio_mode & 0x02) >> 1) << Gpio_pin;
   54   2      
-C51 COMPILER V9.54   IO                                                                    07/22/2021 23:51:18 PAGE 2   
+C51 COMPILER V9.54   IO                                                                    07/23/2021 17:21:52 PAGE 2   
 
   55   2          //上拉
   56   2          P2PU = Gpio_init.gpio_pxpu << Gpio_pin;
@@ -126,7 +126,7 @@ line level    source
  114   2          //模式
  115   2          P5M0 = (Gpio_init.gpio_mode & 0x01) << Gpio_pin;
  116   2          P5M1 = ((Gpio_init.gpio_mode & 0x02) >> 1) << Gpio_pin; 
-C51 COMPILER V9.54   IO                                                                    07/22/2021 23:51:18 PAGE 3   
+C51 COMPILER V9.54   IO                                                                    07/23/2021 17:21:52 PAGE 3   
 
  117   2      
  118   2          //上拉

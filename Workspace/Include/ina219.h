@@ -20,8 +20,8 @@ sbit INA219_SDA=P3^3;//SDA
 void Wait();
 void IIC_Start();
 void IIC_Stop();
-u8 IIC_Respond();
-u8 IIC_MlaveRespond();
+void IIC_MlaveRespond();
+void IIC_MasterNotRespond();
 u8 IIC_SlaveRespond();
 void INA219_GpioInit(void);
 void IIC_MasterSendByte(u8 send_data);
