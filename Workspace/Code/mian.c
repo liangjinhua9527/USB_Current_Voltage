@@ -1,35 +1,50 @@
 #include "stc8g.h"
 #include "oled.h"
+#include <math.h>
 #include "stdio.h"
 #include "INA219.H"
 
 void main(void)
 {
 	char buff[10] = {0};
-	u16 ll=0;
-	
+	int ll=0;
+	float value = 0.0f;
 	int t = 0;
 	OLED_Init();//初始化OLED 
 	OLED_ColorTurn(0);//0正常显示，1 反色显示
   OLED_DisplayTurn(0);//0正常显示 1 屏幕翻转显示	123
 	INA219_GpioInit();
-//	while(1) 
+	INA219_SendByte(INA219_Configuration_Register_Value,INA219_Write_Slave_Address,INA219_Configuration_Register); //模式配置寄存器
+	INA219_SendByte(INA219_Calibration_Register_Value,INA219_Write_Slave_Address,INA219_Calibration_Register);		//基准值寄存器
+	
+	while(1) 
 	{		
 		
+		ll = INA219_ReceiveByte(INA219_Read_Slave_Address, INA219_Bus_voltage_Register);
+		value = (ll >> 3) * Bus_Voltage_LSB;
 		
-		INA219_SendByte(0x0281,INA219_Write_Slave_Address,INA219_Calibration_Register);
-		delay_ms(500);
-		ll = INA219_ReceiveByte(INA219_Write_Slave_Address, INA219_Calibration_Register);
-		
-		t = (ll >> 8) & 0x00ff;
-		sprintf(buff,"%d",t);
+		sprintf(buff,"%.2fV",value);
 		OLED_ShowString(0,2,buff,16);
-		while(1);
-//		sprintf(buff,"6823%d",t);
-//		OLED_ShowChar(120,2,'1',8);//显示ASCII字符	   
-//		OLED_ShowString(0,0,buff,16);
-//		OLED_ShowString(0,2,buff,16);
-//		delay_ms(500);
+		
+		ll = 0,value = 0.0;
+		INA219_SendByte(INA219_Configuration_Register_Value,INA219_Write_Slave_Address,INA219_Configuration_Register); //模式配置寄存器
+		ll = INA219_ReceiveByte(INA219_Read_Slave_Address, INA219_Current_Register);
+		value = ll  * Bus_Current_LSB;
+		value = fabs(value);
+		sprintf(buff,"%.2fA",value);
+
+		OLED_ShowString(65,2,buff,16);
+		
+		ll = 0,value = 0.0;
+		ll = INA219_ReceiveByte(INA219_Read_Slave_Address, INA219_Power_Register);
+		value = ll  * Bus_Power_LSB;
+		
+		sprintf(buff,"%.2fW",value);
+		OLED_ShowString(0,0,buff,16);
+		
+		ll = 0,value = 0.0;
+		delay_ms(500);
+
 //		OLED_Clear();
 	}	  
 

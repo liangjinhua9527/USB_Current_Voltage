@@ -110,9 +110,11 @@ void IIC_MasterSendByte(u8 send_data)
 u8 IIC_MasterReceiveByte()
 {
 	u8 receive_data = 0;
+	//写此命令后， I2C 总线控制器会在 SCL 管脚上产生 8 个时钟，并将从 SDA 端口上读取的数据
+	//依次左移到 I2CRXD 寄存器（先接收高位数据）
 	I2CMSCR = 0x04;
-	receive_data = I2CRXD;
 	Wait();
+	receive_data = I2CRXD;
 	return receive_data;
 }
 
@@ -200,6 +202,7 @@ u16 INA219_ReceiveByte(u8 slave_address,u8 slave_reg_address)
 
 
 	//发送从机寄存器地址
+
 	data_temp[0] = IIC_MasterReceiveByte();
 	IIC_MasterRespond();
 	
@@ -209,13 +212,7 @@ u16 INA219_ReceiveByte(u8 slave_address,u8 slave_reg_address)
 	//停止命令
 	IIC_Stop();
 	P_SW2 = 0x00; 			//关闭访问xfr寄存器
-	
-	receive_data = data_temp[1]; 
-	sprintf(buff,"%d",kk);
-	OLED_ShowString(0,2,buff,16);
-	while(1);
-	receive_data = ((u16)data_temp[0] << 8 | data_temp[1]);
-	OLED_ShowChar(60,0,'7',8);//显示ASCII字符	
+	receive_data = (data_temp[0] << 8 | data_temp[1]);
 	return receive_data;
 }
 

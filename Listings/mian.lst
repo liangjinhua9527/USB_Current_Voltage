@@ -1,97 +1,115 @@
-C51 COMPILER V9.54   MIAN                                                                  07/23/2021 17:23:20 PAGE 1   
+C51 COMPILER V9.54   MIAN                                                                  07/23/2021 23:36:13 PAGE 1   
 
 
 C51 COMPILER V9.54, COMPILATION OF MODULE MIAN
 OBJECT MODULE PLACED IN .\Objects\mian.obj
-COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE Workspace\Code\mian.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Workspace;.\Work
-                    -space\Include) DEBUG OBJECTEXTEND PRINT(.\Listings\mian.lst) TABS(2) OBJECT(.\Objects\mian.obj)
+COMPILER INVOKED BY: G:\keil_v5cm\C51\BIN\C51.EXE Workspace\Code\mian.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Workspace;.\Wo
+                    -rkspace\Include) DEBUG OBJECTEXTEND PRINT(.\Listings\mian.lst) TABS(2) OBJECT(.\Objects\mian.obj)
 
 line level    source
 
    1          #include "stc8g.h"
    2          #include "oled.h"
-   3          #include "stdio.h"
-   4          #include "INA219.H"
-   5          
-   6          void main(void)
-   7          {
-   8   1        char buff[10] = {0};
-   9   1        u16 ll=0;
-  10   1        
-  11   1        int t = 0;
-  12   1        OLED_Init();//初始化OLED 
-  13   1        OLED_ColorTurn(0);//0正常显示，1 反色显示
-  14   1        OLED_DisplayTurn(0);//0正常显示 1 屏幕翻转显示  123
-  15   1        INA219_GpioInit();
-  16   1      //  while(1) 
-  17   1        {   
-  18   2          
-  19   2          
-  20   2          INA219_SendByte(0x0281,INA219_Write_Slave_Address,INA219_Calibration_Register);
-  21   2          delay_ms(500);
-  22   2          ll = INA219_ReceiveByte(INA219_Write_Slave_Address, INA219_Calibration_Register);
-  23   2          
-  24   2          t = (ll >> 8) & 0x00ff;
-  25   2          sprintf(buff,"%d",t);
-  26   2          OLED_ShowString(0,2,buff,16);
-  27   2          while(1);
-  28   2      //    sprintf(buff,"6823%d",t);
-  29   2      //    OLED_ShowChar(120,2,'1',8);//显示ASCII字符     
-  30   2      //    OLED_ShowString(0,0,buff,16);
-  31   2      //    OLED_ShowString(0,2,buff,16);
-  32   2      //    delay_ms(500);
-  33   2      //    OLED_Clear();
-  34   2        }   
-  35   1      
-  36   1        
-  37   1        
-  38   1        
-  39   1        
-  40   1        
-  41   1        
-  42   1        
-  43   1        
-  44   1      //  u8 t=' ';
-  45   1      //  OLED_Init();//初始化OLED 
-  46   1      //  OLED_ColorTurn(0);//0正常显示，1 反色显示
-  47   1      //  OLED_DisplayTurn(0);//0正常显示 1 屏幕翻转显示  
-  48   1      //  while(1) 
-  49   1      //  {   
+   3          #include <math.h>
+   4          #include "stdio.h"
+   5          #include "INA219.H"
+   6          
+   7          void main(void)
+   8          {
+   9   1        char buff[10] = {0};
+  10   1        int ll=0;
+  11   1        float value = 0.0f;
+  12   1        int t = 0;
+  13   1        OLED_Init();//初始化OLED 
+  14   1        OLED_ColorTurn(0);//0正常显示，1 反色显示
+  15   1        OLED_DisplayTurn(0);//0正常显示 1 屏幕翻转显示  123
+  16   1        INA219_GpioInit();
+  17   1        INA219_SendByte(INA219_Configuration_Register_Value,INA219_Write_Slave_Address,INA219_Configuration_Regis
+             -ter); //模式配置寄存器
+  18   1        INA219_SendByte(INA219_Calibration_Register_Value,INA219_Write_Slave_Address,INA219_Calibration_Register)
+             -;    //基准值寄存器
+  19   1        
+  20   1        while(1) 
+  21   1        {   
+  22   2          
+  23   2          ll = INA219_ReceiveByte(INA219_Read_Slave_Address, INA219_Bus_voltage_Register);
+  24   2          value = (ll >> 3) * Bus_Voltage_LSB;
+  25   2          
+  26   2          sprintf(buff,"%.2fV",value);
+  27   2          OLED_ShowString(0,2,buff,16);
+  28   2          
+  29   2          ll = 0,value = 0.0;
+  30   2          INA219_SendByte(INA219_Configuration_Register_Value,INA219_Write_Slave_Address,INA219_Configuration_Regi
+             -ster); //模式配置寄存器
+  31   2          ll = INA219_ReceiveByte(INA219_Read_Slave_Address, INA219_Current_Register);
+  32   2          value = ll  * Bus_Current_LSB;
+  33   2          value = fabs(value);
+  34   2          sprintf(buff,"%.2fA",value);
+  35   2      
+  36   2          OLED_ShowString(65,2,buff,16);
+  37   2          
+  38   2          ll = 0,value = 0.0;
+  39   2          ll = INA219_ReceiveByte(INA219_Read_Slave_Address, INA219_Power_Register);
+  40   2          value = ll  * Bus_Power_LSB;
+  41   2          
+  42   2          sprintf(buff,"%.2fW",value);
+  43   2          OLED_ShowString(0,0,buff,16);
+  44   2          
+  45   2          ll = 0,value = 0.0;
+  46   2          delay_ms(500);
+  47   2      
+  48   2      //    OLED_Clear();
+  49   2        }   
   50   1      
-  51   1      //    delay_ms(500);
-  52   1      //    OLED_Clear();
-  53   1      //    OLED_ShowChinese(0,0,0,16);//中
-  54   1      //    OLED_ShowChinese(18,0,1,16);//景
-C51 COMPILER V9.54   MIAN                                                                  07/23/2021 17:23:20 PAGE 2   
+  51   1        
+C51 COMPILER V9.54   MIAN                                                                  07/23/2021 23:36:13 PAGE 2   
 
-  55   1      //    OLED_ShowChinese(36,0,2,16);//园
-  56   1      //    OLED_ShowChinese(54,0,3,16);//电
-  57   1      //    OLED_ShowChinese(72,0,4,16);//子
-  58   1      //    OLED_ShowChinese(90,0,5,16);//科
-  59   1      //    OLED_ShowChinese(108,0,6,16);//技
-  60   1      //    OLED_ShowString(8,2,"ZHONGJINGYUAN",16);
-  61   1      //    delay_ms(500);
-  62   1      //    OLED_Clear();
-  63   1      //    OLED_ShowString(20,0,"2014/05/01",16);
-  64   1      //    OLED_ShowString(0,2,"ASCII:",16);  
-  65   1      //    OLED_ShowString(63,2,"CODE:",16);
-  66   1      //    OLED_ShowChar(48,2,t,16);//显示ASCII字符     
-  67   1      //    t++;
-  68   1      //    if(t>'~')t=' ';
-  69   1      //    OLED_ShowNum(103,2,t,3,16);
-  70   1      //    delay_ms(500);
-  71   1      //    OLED_Clear();
-  72   1      //  }   
-  73   1      
-  74   1      }
+  52   1        
+  53   1        
+  54   1        
+  55   1        
+  56   1        
+  57   1        
+  58   1        
+  59   1      //  u8 t=' ';
+  60   1      //  OLED_Init();//初始化OLED 
+  61   1      //  OLED_ColorTurn(0);//0正常显示，1 反色显示
+  62   1      //  OLED_DisplayTurn(0);//0正常显示 1 屏幕翻转显示  
+  63   1      //  while(1) 
+  64   1      //  {   
+  65   1      
+  66   1      //    delay_ms(500);
+  67   1      //    OLED_Clear();
+  68   1      //    OLED_ShowChinese(0,0,0,16);//中
+  69   1      //    OLED_ShowChinese(18,0,1,16);//景
+  70   1      //    OLED_ShowChinese(36,0,2,16);//园
+  71   1      //    OLED_ShowChinese(54,0,3,16);//电
+  72   1      //    OLED_ShowChinese(72,0,4,16);//子
+  73   1      //    OLED_ShowChinese(90,0,5,16);//科
+  74   1      //    OLED_ShowChinese(108,0,6,16);//技
+  75   1      //    OLED_ShowString(8,2,"ZHONGJINGYUAN",16);
+  76   1      //    delay_ms(500);
+  77   1      //    OLED_Clear();
+  78   1      //    OLED_ShowString(20,0,"2014/05/01",16);
+  79   1      //    OLED_ShowString(0,2,"ASCII:",16);  
+  80   1      //    OLED_ShowString(63,2,"CODE:",16);
+  81   1      //    OLED_ShowChar(48,2,t,16);//显示ASCII字符     
+  82   1      //    t++;
+  83   1      //    if(t>'~')t=' ';
+  84   1      //    OLED_ShowNum(103,2,t,3,16);
+  85   1      //    delay_ms(500);
+  86   1      //    OLED_Clear();
+  87   1      //  }   
+  88   1      
+  89   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    109    ----
-   CONSTANT SIZE    =     13    ----
+   CODE SIZE        =    394    ----
+   CONSTANT SIZE    =     28    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =   ----      10
+   DATA SIZE        =   ----      18
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
 END OF MODULE INFORMATION.
