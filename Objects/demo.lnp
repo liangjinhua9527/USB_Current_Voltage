@@ -2,6 +2,7 @@
 ".\Objects\INA219.obj",
 ".\Objects\io.obj",
 ".\Objects\mian.obj",
-".\Objects\OLED.obj" 
+".\Objects\OLED.obj",
+".\Objects\time.obj" 
 TO ".\Objects\demo" 
 PRINT(".\Listings\demo.m51") RAMSIZE(256) 

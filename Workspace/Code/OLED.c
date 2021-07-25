@@ -216,6 +216,7 @@ void OLED_ShowChar(u8 x,u8 y,u8 chr,u8 sizey)
 	for(i=0;i<size1;i++)
 	{
 		if(i%sizex==0&&sizey!=8) OLED_Set_Pos(x,y++);
+
 		if(sizey==8) OLED_WR_Byte(asc2_0806[c][i],OLED_DATA);//6X8×ÖºÅ
 		else if(sizey==16) OLED_WR_Byte(asc2_1608[c][i],OLED_DATA);//8x16×ÖºÅ
 //		else if(sizey==xx) OLED_WR_Byte(asc2_xxxx[c][i],OLED_DATA);//ÓÃ»§Ìí¼Ó×ÖºÅ
@@ -271,7 +272,7 @@ void OLED_ShowChinese(u8 x,u8 y,u8 no,u8 sizey)
 	for(i=0;i<size1;i++)
 	{
 		if(i%sizey==0) OLED_Set_Pos(x,y++);
-		if(sizey==16) OLED_WR_Byte(Hzk[no][i],OLED_DATA);//16x16×ÖºÅ
+//		if(sizey==16) OLED_WR_Byte(Hzk[no][i],OLED_DATA);//16x16×ÖºÅ
 //		else if(sizey==xx) OLED_WR_Byte(xxx[c][i],OLED_DATA);//ÓÃ»§Ìí¼Ó×ÖºÅ
 		else return;
 	}				

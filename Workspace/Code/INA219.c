@@ -165,10 +165,10 @@ void INA219_SendByte(u16 iic_data,u8 slave_address,u8 slave_reg_address)
 //IIC接收byte
 u16 INA219_ReceiveByte(u8 slave_address,u8 slave_reg_address)
 {
-	char buff[10] = {0};
+
 	int data_temp[2] = {0};
 	u16 receive_data = 0;
-	int kk = 0;
+
 	
 	//判断总线是否处于忙
 

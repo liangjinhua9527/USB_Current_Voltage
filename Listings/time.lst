@@ -1,0 +1,66 @@
+C51 COMPILER V9.54   TIME                                                                  07/25/2021 22:57:03 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE TIME
+OBJECT MODULE PLACED IN .\Objects\time.obj
+COMPILER INVOKED BY: G:\keil_v5cm\C51\BIN\C51.EXE Workspace\Code\time.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Workspace;.\Wo
+                    -rkspace\Include) DEBUG OBJECTEXTEND PRINT(.\Listings\time.lst) TABS(2) OBJECT(.\Objects\time.obj)
+
+line level    source
+
+   1          #include "time.h"
+   2          
+   3           u16 second = 0;
+   4           u16 minute = 0;
+   5           u16 hour = 0;
+   6          
+   7          void time_init()
+   8          {
+   9   1        P_SW2 = 0x80;
+  10   1        TMOD = 0x00; //模式 0
+  11   1        TL0 = 0x30; //65536-24M/12/1000
+  12   1        TH0 = 0xf8;
+  13   1        TR0 = 1; //启动定时器
+  14   1        ET0 = 1; //使能定时器中断
+  15   1        EA = 1;
+  16   1        P_SW2 = 0x00;
+  17   1      }
+  18          
+  19          void TM0_Isr() interrupt 1
+  20          {
+  21   1        static u16 i = 0;
+  22   1        i++;
+  23   1        if(i == 1000){
+  24   2          second++;
+  25   2          i = 0;
+  26   2        }
+  27   1        if(second == 60)
+  28   1        {
+  29   2          second = 0;
+  30   2          minute ++;
+  31   2          
+  32   2          if(minute == 60)
+  33   2          {
+  34   3              minute = 0;
+  35   3              hour ++;
+  36   3      
+  37   3              if(hour == 100) hour = 0;
+  38   3          }
+  39   2          
+  40   2        }
+  41   1      
+  42   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    108    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      8    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
